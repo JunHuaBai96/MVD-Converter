@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>元素摩尔体积与密度转换器</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.93);
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        
+        header {
+            background: linear-gradient(to right, #2c3e50, #34495e);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 30px;
+        }
+        
+        .left-panel {
+            flex: 1;
+            min-width: 300px;
+            padding-right: 30px;
+            border-right: 1px solid #eee;
+        }
+        
+        .right-panel {
+            flex: 1;
+            min-width: 300px;
+            padding-left: 30px;
+        }
+        
+        .panel-title {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .element-selector {
+            margin-bottom: 25px;
+        }
+        
+        .element-selector label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #2c3e50;
+            font-size: 1.2rem;
+        }
+        
+        .select-container {
+            position: relative;
+            margin-bottom: 15px;
+        }
+        
+        select {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1rem;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            background-color: white;
+            appearance: none;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+        
+        select:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+        
+        .select-container i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #3498db;
+            pointer-events: none;
+        }
+        
+        .element-info {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            border-left: 5px solid #3498db;
+        }
+        
+        .element-info h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .info-item:last-child {
+            border-bottom: none;
+        }
+        
+        .info-label {
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .info-value {
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        
+        .converter {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+        
+        .input-group {
+            margin-bottom: 25px;
+        }
+        
+        .input-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #2c3e50;
+            font-size: 1.2rem;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1rem;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            transition: border-color 0.3s;
+        }
+        
+        .input-group input:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            flex: 1;
+            min-width: 150px;
+            padding: 15px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .convert-btn {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .convert-btn:hover {
+            background-color: #2980b9;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        .reset-btn {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .reset-btn:hover {
+            background-color: #c0392b;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+        }
+        
+        .result {
+            margin-top: 25px;
+            background-color: #2ecc71;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+        }
+        
+        .result h3 {
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .result-content {
+            font-size: 1.2rem;
+            line-height: 1.8;
+        }
+        
+        .highlight {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-weight: 700;
+        }
+        
+        .periodic-hint {
+            text-align: center;
+            color: #7f8c8d;
+            font-style: italic;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        footer {
+            text-align: center;
+            color: white;
+            padding: 20px;
+            margin-top: 20px;
+            width: 100%;
+            font-size: 1rem;
+        }
+        
+        .formula-box {
+            background-color: #f1f8ff;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            border: 1px solid #d1e7ff;
+        }
+        
+        .formula-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .formula {
+            font-family: 'Courier New', monospace;
+            background-color: white;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+            
+            .left-panel, .right-panel {
+                padding: 0;
+                border: none;
+            }
+            
+            .left-panel {
+                margin-bottom: 30px;
+                padding-bottom: 30px;
+                border-bottom: 1px solid #eee;
+            }
+            
+            header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-atom"></i> 元素摩尔体积与密度转换器</h1>
+            <p>选择化学元素，输入已知的摩尔体积或密度，计算另一个物理量。使用公式：密度 = 摩尔质量 / 摩尔体积</p>
+        </header>
+        
+        <div class="content">
+            <div class="left-panel">
+                <h2 class="panel-title"><i class="fas fa-list"></i> 元素选择</h2>
+                
+                <div class="element-selector">
+                    <label for="element-select"><i class="fas fa-search"></i> 选择元素</label>
+                    <div class="select-container">
+                        <select id="element-select">
+                            <option value="">-- 请选择化学元素 --</option>
+                            <!-- 常见元素将通过JavaScript添加 -->
+                        </select>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+                
+                <div class="element-info">
+                    <h3><i class="fas fa-info-circle"></i> 元素信息</h3>
+                    <div class="info-item">
+                        <span class="info-label">元素名称：</span>
+                        <span id="element-name" class="info-value">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">元素符号：</span>
+                        <span id="element-symbol" class="info-value">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">原子序数：</span>
+                        <span id="atomic-number" class="info-value">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">摩尔质量 (g/mol)：</span>
+                        <span id="molar-mass" class="info-value">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">常见密度 (g/cm³)：</span>
+                        <span id="common-density" class="info-value">-</span>
+                    </div>
+                </div>
+                
+                <div class="formula-box">
+                    <div class="formula-title"><i class="fas fa-calculator"></i> 转换公式</div>
+                    <div class="formula">
+                        密度 (ρ) = 摩尔质量 (M) / 摩尔体积 (V<sub>m</sub>)
+                    </div>
+                    <div class="formula">
+                        摩尔体积 (V<sub>m</sub>) = 摩尔质量 (M) / 密度 (ρ)
+                    </div>
+                </div>
+                
+                <p class="periodic-hint">
+                    <i class="fas fa-lightbulb"></i> 提示：摩尔体积单位为cm³/mol；密度单位为g/cm³
+                </p>
+            </div>
+            
+            <div class="right-panel">
+                <h2 class="panel-title"><i class="fas fa-exchange-alt"></i> 转换计算</h2>
+                
+                <div class="converter">
+                    <div class="input-group">
+                        <label for="molar-volume"><i class="fas fa-flask"></i> 摩尔体积 (cm³/mol)</label>
+                        <input type="number" id="molar-volume" placeholder="输入已知的摩尔体积值">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="density"><i class="fas fa-weight-hanging"></i> 密度 (g/cm³)</label>
+                        <input type="number" id="density" placeholder="输入已知的密度值">
+                    </div>
+                    
+                    <div class="buttons">
+                        <button id="convert-btn" class="convert-btn">
+                            <i class="fas fa-calculator"></i> 计算转换
+                        </button>
+                        <button id="reset-btn" class="reset-btn">
+                            <i class="fas fa-redo"></i> 重置输入
+                        </button>
+                    </div>
+                    
+                    <div id="result" class="result">
+                        <h3><i class="fas fa-check-circle"></i> 计算结果</h3>
+                        <div id="result-content" class="result-content">
+                            <!-- 计算结果将在这里显示 -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="formula-box">
+                    <div class="formula-title"><i class="fas fa-info-circle"></i> 使用说明</div>
+                    <ol style="padding-left: 20px; line-height: 1.8;">
+                        <li>从左侧列表中选择一个化学元素</li>
+                        <li>在摩尔体积或密度输入框中输入一个已知值</li>
+                        <li>点击"计算转换"按钮，系统将自动计算另一个值</li>
+                        <li>如需重新计算，请点击"重置输入"按钮</li>
+                        <li>注意单位：摩尔体积为cm³/mol，密度为g/cm³</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>化学计算工具 &copy; 2025 | 元素摩尔体积与密度转换器</p>
+        <p>注意：计算结果仅供参考，实际数值可能因条件不同而变化</p>
+    </footer>
+
+    <script>
+        // 常见元素数据（元素符号、名称、原子序数、摩尔质量(g/mol)、常见密度(g/cm³)）
+        const elements = [
+            {symbol: "H", name: "氢", atomicNumber: 1, molarMass: 1.008, density: 0.0899},
+            {symbol: "He", name: "氦", atomicNumber: 2, molarMass: 4.0026, density: 0.1785},
+            {symbol: "C", name: "碳", atomicNumber: 6, molarMass: 12.011, density: 2.267},
+            {symbol: "N", name: "氮", atomicNumber: 7, molarMass: 14.007, density: 1.2506},
+            {symbol: "O", name: "氧", atomicNumber: 8, molarMass: 15.999, density: 1.429},
+            {symbol: "F", name: "氟", atomicNumber: 9, molarMass: 18.998, density: 1.696},
+            {symbol: "Ne", name: "氖", atomicNumber: 10, molarMass: 20.180, density: 0.9002},
+            {symbol: "Na", name: "钠", atomicNumber: 11, molarMass: 22.990, density: 0.968},
+            {symbol: "Mg", name: "镁", atomicNumber: 12, molarMass: 24.305, density: 1.738},
+            {symbol: "Al", name: "铝", atomicNumber: 13, molarMass: 26.982, density: 2.70},
+            {symbol: "Si", name: "硅", atomicNumber: 14, molarMass: 28.085, density: 2.329},
+            {symbol: "P", name: "磷", atomicNumber: 15, molarMass: 30.974, density: 1.823},
+            {symbol: "S", name: "硫", atomicNumber: 16, molarMass: 32.06, density: 2.067},
+            {symbol: "Cl", name: "氯", atomicNumber: 17, molarMass: 35.45, density: 3.214},
+            {symbol: "Ar", name: "氩", atomicNumber: 18, molarMass: 39.948, density: 1.784},
+            {symbol: "K", name: "钾", atomicNumber: 19, molarMass: 39.098, density: 0.862},
+            {symbol: "Ca", name: "钙", atomicNumber: 20, molarMass: 40.078, density: 1.55},
+            {symbol: "Fe", name: "铁", atomicNumber: 26, molarMass: 55.845, density: 7.874},
+            {symbol: "Cu", name: "铜", atomicNumber: 29, molarMass: 63.546, density: 8.96},
+            {symbol: "Zn", name: "锌", atomicNumber: 30, molarMass: 65.38, density: 7.14},
+            {symbol: "Ag", name: "银", atomicNumber: 47, molarMass: 107.87, density: 10.49},
+            {symbol: "Au", name: "金", atomicNumber: 79, molarMass: 196.97, density: 19.32},
+            {symbol: "Hg", name: "汞", atomicNumber: 80, molarMass: 200.59, density: 13.534},
+            {symbol: "Pb", name: "铅", atomicNumber: 82, molarMass: 207.2, density: 11.34}
+        ];
+        
+        // DOM元素
+        const elementSelect = document.getElementById('element-select');
+        const elementName = document.getElementById('element-name');
+        const elementSymbol = document.getElementById('element-symbol');
+        const atomicNumber = document.getElementById('atomic-number');
+        const molarMass = document.getElementById('molar-mass');
+        const commonDensity = document.getElementById('common-density');
+        const molarVolumeInput = document.getElementById('molar-volume');
+        const densityInput = document.getElementById('density');
+        const convertBtn = document.getElementById('convert-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const resultDiv = document.getElementById('result');
+        const resultContent = document.getElementById('result-content');
+        
+        // 当前选择的元素
+        let selectedElement = null;
+        
+        // 初始化元素选择下拉菜单
+        function initElementSelect() {
+            elements.forEach(element => {
+                const option = document.createElement('option');
+                option.value = element.symbol;
+                option.textContent = `${element.symbol} - ${element.name} (${element.molarMass} g/mol)`;
+                elementSelect.appendChild(option);
+            });
+        }
+        
+        // 更新元素信息显示
+        function updateElementInfo(elementSymbol) {
+            const element = elements.find(el => el.symbol === elementSymbol);
+            if (!element) return;
+            
+            selectedElement = element;
+            
+            elementName.textContent = element.name;
+            elementSymbol.textContent = element.symbol;
+            atomicNumber.textContent = element.atomicNumber;
+            molarMass.textContent = element.molarMass.toFixed(3);
+            commonDensity.textContent = element.density.toFixed(3);
+            
+            // 清除之前的计算结果
+            resultDiv.style.display = 'none';
+        }
+        
+        // 执行转换计算
+        function performConversion() {
+            // 验证是否已选择元素
+            if (!selectedElement) {
+                showResult("请先选择一个化学元素", false);
+                return;
+            }
+            
+            const molarVolume = parseFloat(molarVolumeInput.value);
+            const density = parseFloat(densityInput.value);
+            
+            // 验证输入
+            if (isNaN(molarVolume) && isNaN(density)) {
+                showResult("请输入摩尔体积或密度值", false);
+                return;
+            }
+            
+            if (!isNaN(molarVolume) && !isNaN(density)) {
+                showResult("只能输入一个值进行计算，另一个值将被计算得出", true);
+                // 优先使用摩尔体积计算密度
+                calculateFromMolarVolume();
+            } else if (!isNaN(molarVolume)) {
+                calculateFromMolarVolume();
+            } else if (!isNaN(density)) {
+                calculateFromDensity();
+            }
+        }
+        
+        // 从摩尔体积计算密度
+        function calculateFromMolarVolume() {
+            const molarVolume = parseFloat(molarVolumeInput.value);
+            
+            if (molarVolume <= 0) {
+                showResult("摩尔体积必须大于0", false);
+                return;
+            }
+            
+            // 密度 = 摩尔质量 / 摩尔体积
+            // 单位：密度(g/cm³) = 摩尔质量(g/mol) ÷ 摩尔体积(cm³/mol)
+            const density = selectedElement.molarMass / molarVolume;
+            
+            // 更新密度输入框
+            densityInput.value = density.toFixed(6);
+            
+            // 显示结果
+            const resultText = `
+                使用摩尔体积 <span class="highlight">${molarVolume.toFixed(3)} cm³/mol</span> 计算：<br><br>
+                密度 = 摩尔质量 / 摩尔体积 <br>
+                = ${selectedElement.molarMass.toFixed(3)} g/mol ÷ ${molarVolume.toFixed(3)} cm³/mol <br>
+                = <span class="highlight">${density.toFixed(6)} g/cm³</span>
+            `;
+            
+            showResult(resultText, true);
+        }
+        
+        // 从密度计算摩尔体积
+        function calculateFromDensity() {
+            const density = parseFloat(densityInput.value);
+            
+            if (density <= 0) {
+                showResult("密度必须大于0", false);
+                return;
+            }
+            
+            // 摩尔体积 = 摩尔质量 / 密度
+            // 单位：摩尔体积(cm³/mol) = 摩尔质量(g/mol) ÷ 密度(g/cm³)
+            const molarVolume = selectedElement.molarMass / density;
+            
+            // 更新摩尔体积输入框
+            molarVolumeInput.value = molarVolume.toFixed(6);
+            
+            // 显示结果
+            const resultText = `
+                使用密度 <span class="highlight">${density.toFixed(3)} g/cm³</span> 计算：<br><br>
+                摩尔体积 = 摩尔质量 / 密度 <br>
+                = ${selectedElement.molarMass.toFixed(3)} g/mol ÷ ${density.toFixed(3)} g/cm³ <br>
+                = <span class="highlight">${molarVolume.toFixed(6)} cm³/mol</span>
+            `;
+            
+            showResult(resultText, true);
+        }
+        
+        // 显示计算结果
+        function showResult(message, isSuccess) {
+            resultContent.innerHTML = message;
+            
+            if (isSuccess) {
+                resultDiv.style.backgroundColor = "#2ecc71";
+            } else {
+                resultDiv.style.backgroundColor = "#e74c3c";
+            }
+            
+            resultDiv.style.display = 'block';
+        }
+        
+        // 重置输入
+        function resetInputs() {
+            molarVolumeInput.value = '';
+            densityInput.value = '';
+            resultDiv.style.display = 'none';
+        }
+        
+        // 初始化
+        function init() {
+            initElementSelect();
+            
+            // 事件监听
+            elementSelect.addEventListener('change', function() {
+                updateElementInfo(this.value);
+            });
+            
+            convertBtn.addEventListener('click', performConversion);
+            
+            resetBtn.addEventListener('click', resetInputs);
+            
+            // 输入框按Enter键也可以触发计算
+            molarVolumeInput.addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') performConversion();
+            });
+            
+            densityInput.addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') performConversion();
+            });
+            
+            // 默认选择一个元素
+            elementSelect.value = "Fe";
+            updateElementInfo("Fe");
+        }
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
