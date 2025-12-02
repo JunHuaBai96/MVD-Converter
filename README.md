@@ -34,14 +34,6 @@
 
 ---
 
-### 在线部署（可选）
-
-1. 将 `MVD-Converter.html` 推送到 GitHub 仓库。
-2. 在仓库设置中启用 GitHub Pages（选择 `main` 分支的根目录）。
-3. 使用生成的链接即可在线访问，如 `https://JunHuaBai96.github.io/MVD-Converter/`。
-
----
-
 ### 技术栈
 
 - HTML5：页面结构与语义化内容
@@ -77,9 +69,10 @@
 
 ---
 
-### 许可证
+#### License
 
-`LICENSE` 
+[MIT License](./LICENSE)
+
 
 
 
