@@ -38,17 +38,7 @@
 
 1. 将 `MVD-Converter.html` 推送到 GitHub 仓库。
 2. 在仓库设置中启用 GitHub Pages（选择 `main` 分支的根目录）。
-3. 使用生成的链接即可在线访问，如 `https://your-username.github.io/MVD-Converter/`。
-
----
-
-### 项目结构
-
-```
-.
-├── MVD-Converter.html   # 页面结构、样式与脚本均在此文件中
-└── README.md            # 项目说明（本文件）
-```
+3. 使用生成的链接即可在线访问，如 `https://JunHuaBai96.github.io/MVD-Converter/`。
 
 ---
 
@@ -89,7 +79,7 @@
 
 ### 许可证
 
-根据你的偏好选择开源协议（推荐 MIT）。若已添加 `LICENSE` 文件，请在此处说明项目所采用的具体许可证。
+`LICENSE` 
 
 
 
