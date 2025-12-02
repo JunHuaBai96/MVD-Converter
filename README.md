@@ -2,7 +2,7 @@
 
 一个用于计算化学元素摩尔体积与密度的交互式 Web 工具。通过选择元素并输入已知的摩尔体积或密度，程序会根据公式自动推算另一个物理量，适合基础化学学习与简单科研辅助。
 
-<img width="794" height="769" alt="image" src="https://github.com/user-attachments/assets/d038d833-a6bb-46c7-833f-d053d89f5414" />
+<img width="863" height="887" alt="image" src="https://github.com/user-attachments/assets/5ed2cc92-56f1-4c53-bb9b-230b03581e70" />
 
 ---
 
@@ -90,6 +90,7 @@
 ### 许可证
 
 根据你的偏好选择开源协议（推荐 MIT）。若已添加 `LICENSE` 文件，请在此处说明项目所采用的具体许可证。
+
 
 
 
